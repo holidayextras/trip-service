@@ -22,6 +22,12 @@ Show all trips (dev only):
 curl -i http://app-vm.holidayextras.co.uk:3000/
 ````
 
+Get a trip via a booking ref:
+
+````
+curl -i http://app-vm.holidayextras.co.uk:3000/?ref=abc
+````
+
 Create a new trip with two linked bookings:
 
 ````
@@ -32,13 +38,6 @@ Get trip:
 
 ````
 curl -i http://app-vm.holidayextras.co.uk:3000/cc66e510-322d-11e4-8459-1150f735bf96
-````
-
-Get a trip via a booking ref:
-
-````
-curl -i http://app-vm.holidayextras.co.uk:3000/booking/abc
-
 ````
 
 Update a trip with a new booking ref:
