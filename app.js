@@ -38,16 +38,42 @@ var server = restify.createServer({name: 'trip-service'});
 server
   .use(restify.fullResponse())
   .use(restify.bodyParser())
+  .use(restify.queryParser())
 ;
 server.listen(3000, function(){
   console.log('%s listening at %s', server.name, server.url);
 });
 
-//get all trips, (development only)
 server.get('/', function(req, res, next){
-  Trip.scan().exec(function(err, trips, lastKey){
-    res.send(200, trips);
-  });
+  if(req.params.ref){  //get a single trip via booking ref
+    TripBooking.query('ref').eq(req.params.ref).exec(function(err, bookings){
+      if(err){
+        return console.log(err);
+      }
+      //only caring about the first match
+      if(bookings.length){
+        Trip.get({id: bookings.shift().tripId}, function(err, trip){
+          if(err){
+            return console.log(err);
+          }
+          if(trip){
+            res.send(200, [trip]);
+          }
+          else{
+            res.send(404);
+          }
+        });
+      }
+      else{
+        res.send(404);
+      }
+    });
+  }
+  else{	//get all trips, (development only)
+    Trip.scan().exec(function(err, trips, lastKey){
+      res.send(200, trips);
+    });
+  }
 });
 
 //create a trip
@@ -97,23 +123,6 @@ server.get('/:id', function (req, res, next){
   });
 });
 
-//get a single trip via booking ref
-server.get('/booking/:id', function (req, res, next){
-  TripBooking.query('ref').eq(req.params.id).exec(function(err, bookings){
-    if(err){
-      return console.log(err);
-    }
-    //only caring about the first match
-    if(bookings.length){
-      var url = "/" + bookings.shift().tripId;
-      res.header('Location', url)
-      res.send(302);
-    }
-    else{
-      res.send(404);
-    }
-  });
-});
 
 //add another booking to a trip
 server.put('/:id', function(req, res, next){
