@@ -1,0 +1,11 @@
+{
+  "name": "trip-service",
+  "repository": "trip-service",
+  "readmeFilename": "README.md",
+  "description": "Trip service",
+  "dependencies": {
+    "restify": "~2.8.2",
+    "dynamoose": "~0.3.1",
+    "node-uuid": "~1.4.1"
+  }
+}
