@@ -132,20 +132,37 @@ server.put('/:id', function(req, res, next){
     }
     if(trip){
       //update the trip with the new booking
-      Trip.update({id: trip.id}, {$ADD: {bookings: [req.params.booking]}}, function(err){
+      console.log('found trip');
+      console.log(req.params.bookings);
+      sentBookings = req.params.bookings || []
+      Trip.update({id: trip.id}, {$ADD: {bookings: sentBookings}}, function(err){
         if(err){
           return console.log(err);
         }
-        //add to the booking index lookup
-        var tripBooking = new TripBooking({
-          ref: req.params.booking,
-          tripId: trip.id
+        sentBookings.forEach(function(ref){
+          console.log("adding index for: " + ref);
+          
+          TripBooking.get({ref: ref}, function(err, tripBooking){
+            if(err){
+              return console.log(err);
+            }
+            if(!tripBooking){
+              console.log('creating new tripbooking for: ' + ref);
+              //add to the booking index lookup
+              tripBooking = new TripBooking({
+               ref: ref,
+               tripId: trip.id
+              });
+              tripBooking.save(function(err){
+                if(err){
+                  return console.log(err);
+                }
+              });
+            }
+          });
+          
         });
-        tripBooking.save(function(err){
-          if(err){
-            return console.log(err);
-          }
-        });
+        
       });
       //get the updated trip data
       Trip.get({id: trip.id}, function(err, trip){
