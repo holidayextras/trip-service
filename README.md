@@ -1,6 +1,6 @@
-# Trip Service PoC
+# Trip Service
 
-## Testing
+## Running locally
 
 Start local dynamodb:
 
@@ -8,10 +8,22 @@ Start local dynamodb:
 script/run_local_dynamodb.sh
 ````
 
+Set environment:
+
+````
+export NODE_PATH=./src
+````
+
 Start server:
 
 ````
 node app.js
+````
+
+Tests:
+
+````
+npm test
 ````
 
 ### Endpoints

@@ -2,40 +2,13 @@ exports.Server = function(){
   //local development only
   process.env['AWS_ACCESS_KEY_ID'] = 'myKeyId';
   process.env['AWS_SECRET_ACCESS_KEY'] = 'secretKey';
-  process.env['AWS_REGION'] = 'us-east-1'; 
-  
-  var dynamoose = require('dynamoose');
-  dynamoose.local('http://app-vm.holidayextras.co.uk:8000');
-  //dynamoose.local();
-  
+  process.env['AWS_REGION'] = 'us-east-1';
+
   var restify = require('restify');
-  var uuid = require('node-uuid');
-  
-  //Main data storage model
-  var Trip = dynamoose.model('Trip', {
-    id: {
-      type: String,
-      required: true,
-      hashKey: true,
-    },
-    bookings: {
-      type: [String]
-    }
-  });
-  
-  //Additional index table for looking up via booking refs
-  var TripBooking = dynamoose.model('TripBooking', {
-    ref: {
-      type: String,
-      required: true,
-      hashKey: true
-    },
-    tripId: {
-      type: String,
-      required: true
-    }
-  });
-  
+  var Trip = require('models/trip');
+  var TripBooking = require('models/trip_booking');
+  var SimpleDataPresenter = require('presenters/simple_data');
+
   var server = restify.createServer({name: 'trip-service'});
   server
     .use(restify.fullResponse())
@@ -45,7 +18,7 @@ exports.Server = function(){
   server.listen(3000, function(){
     console.log('%s listening at %s', server.name, server.url);
   });
-  
+
   server.get('/', function(req, res, next){
     if(req.params.ref){  //get a single trip via booking ref
       TripBooking.query('ref').eq(req.params.ref).exec(function(err, bookings){
@@ -54,12 +27,9 @@ exports.Server = function(){
         }
         //only caring about the first match
         if(bookings.length){
-          Trip.get({id: bookings.shift().tripId}, function(err, trip){
-            if(err){
-              return console.log(err);
-            }
+          Trip.getById(bookings.shift().tripId, function(trip){
             if(trip){
-              res.send(200, [trip]);
+              res.send(200, [new SimpleDataPresenter(trip).transform()]);
             }
             else{
               res.send(404, []);
@@ -72,78 +42,61 @@ exports.Server = function(){
       });
     }
     else{ //get all trips, (development only)
-      Trip.scan().exec(function(err, trips, lastKey){
-        res.send(200, trips);
+      Trip.findAll(function(trips){
+        res.send(200, SimpleDataPresenter.transformModels(trips));
       });
     }
   });
-  
+
   //create a trip
   server.post('/', function(req, res, next){
     var bookings = req.params.bookings || [];
-    var tripId = uuid.v1(); 
-    var trip = new Trip({
-      id: tripId,
+    var trip = Trip.create({
       bookings: bookings
     });
-  
+
     trip.save(function(err){
-      if(err){
-        return console.log(err);
-      }
-      else{
-        //create booking ref lookup if required
-        bookings.forEach(function(booking){
-          var tripBooking = new TripBooking({
-            ref: booking,
-            tripId: tripId
-          });
-          tripBooking.save(function(err){
-            if(err){
-              return console.log(err);
-            }
-          });
+      //create booking ref lookup if required
+      bookings.forEach(function(booking){
+        var tripBooking = new TripBooking({
+          ref: booking,
+          tripId: trip.id()
         });
-        res.send(201, trip);
-      }
+        tripBooking.save(function(err){
+          if(err){
+            return console.log(err);
+          }
+        });
+      });
+      res.send(201, new SimpleDataPresenter(trip).transform());
     });
-  
+
   });
-  
+
   //get a single trip
   server.get('/:id', function (req, res, next){
-    Trip.get({id: req.params.id}, function(err, trip){
-      if(err){
-        return console.log(err);
-      }
+    Trip.getById(req.params.id, function(trip){
       if(trip){
-        res.send(trip);
+        res.send(new SimpleDataPresenter(trip).transform());
       }
       else{
         res.send(404);
       }
     });
   });
-  
-  
+
   //add another booking to a trip
   server.put('/:id', function(req, res, next){
-    Trip.get({id: req.params.id}, function(err, trip){
-      if(err){
-        return console.log(err);
-      }
+    Trip.getById(req.params.id, function(trip){
       if(trip){
         //update the trip with the new booking
         console.log('found trip');
         console.log(req.params.bookings);
         sentBookings = req.params.bookings || []
-        Trip.update({id: trip.id}, {$ADD: {bookings: sentBookings}}, function(err){
-          if(err){
-            return console.log(err);
-          }
+        trip.update({bookings: sentBookings}, function(){
           sentBookings.forEach(function(ref){
             console.log("adding index for: " + ref);
-            
+
             TripBooking.get({ref: ref}, function(err, tripBooking){
               if(err){
                 return console.log(err);
@@ -162,16 +115,13 @@ exports.Server = function(){
                 });
               }
             });
-            
+
           });
-          
+
         });
         //get the updated trip data
-        Trip.get({id: trip.id}, function(err, trip){
-          if(err){
-            return console.log(err);
-          }
-          res.send(trip);
+        Trip.getById(trip.id, function(trip){
+          res.send(new SimpleDataPresenter(trip).transform());
         });
       }
       else{ 
