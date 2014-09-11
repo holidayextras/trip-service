@@ -57,3 +57,10 @@ Update a trip with a new booking ref:
 ````
 curl -i -X PUT -d 'booking=222' http://app-vm.holidayextras.co.uk:3000/0a3a4810-327d-11e4-afa6-23eed8fcd0d2
 ````
+
+## Todo
+
+* Model classes should share interface
+* Config files
+* Controllers
+* Unit tests for models

@@ -10,7 +10,9 @@ Trip.prototype.save = function(cb){
     if(err){
       return console.log(err);
     }
-    cb();
+    if(cb){
+      cb();
+    }
   });
 };
 
