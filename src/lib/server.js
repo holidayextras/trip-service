@@ -1,4 +1,4 @@
-exports.Server = function(){
+var Server = function(){
   //local development only
   process.env['AWS_ACCESS_KEY_ID'] = 'myKeyId';
   process.env['AWS_SECRET_ACCESS_KEY'] = 'secretKey';
@@ -24,3 +24,5 @@ exports.Server = function(){
   var router = new Router(server, __dirname + '/../controllers', routes);
 
 };
+
+module.exports = Server;

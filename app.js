@@ -1,2 +1,2 @@
 //just runs the server
-require('lib/server').Server();
+require('lib/server')();

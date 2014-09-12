@@ -4,7 +4,7 @@
   "readmeFilename": "README.md",
   "description": "Trip service",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register --require should test/integration"
+    "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register --require should test/controllers"
   },
   "dependencies": {
     "aws-sdk": "~2.0.15",
