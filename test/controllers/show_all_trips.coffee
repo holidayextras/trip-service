@@ -5,14 +5,14 @@ client = restify.createJsonClient
   version: '*'
   url: 'http://127.0.0.1:3000'
 
-describe 'GET /', ->
+describe 'GET /trip', ->
 
   it 'should return a successful response code', (done) ->
-    client.get '/', (err, req, res, data) ->
+    client.get '/trip', (err, req, res, data) ->
       res.statusCode.should.be.equal 200
       done()
 
   it 'should return an array', (done) ->
-    client.get '/', (err, req, res, data) ->
+    client.get '/trip', (err, req, res, data) ->
       data.should.be.instanceof Array
       done()
