@@ -1,0 +1,13 @@
+{
+  "db": {
+    "url": "http://app-vm.holidayextras.co.uk:8000",
+    "aws": {
+      "accessKeyId": "myKeyId",
+      "secretAccessKey": "secretKey",
+      "region": "us-east-1"
+    }
+  },
+  "server": {
+    "port": 3000
+  }
+}
