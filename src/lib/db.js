@@ -1,4 +1,7 @@
+var config = require('config');
 var dynamoose = require('dynamoose');
-dynamoose.local('http://app-vm.holidayextras.co.uk:8000');
-//dynamoose.local();
+var dbConfig = config.get('db');
+dynamoose.AWS.config.update(dbConfig.aws);
+dynamoose.local(dbConfig.url);
+
 module.exports = dynamoose;

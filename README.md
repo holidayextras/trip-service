@@ -12,6 +12,7 @@ Set environment:
 
 ````
 export NODE_PATH=./src
+export NODE_ENV=development
 ````
 
 Start server:
@@ -61,7 +62,7 @@ curl -i -X PUT -d 'booking=222' http://app-vm.holidayextras.co.uk:3000/trip/0a3a
 ## Todo
 
 * Model classes should share interface
-* Config files
 * Unit tests for models
 * Docs
 * Input validation
+* Logging

@@ -1,11 +1,7 @@
 var Server = function(){
-  //local development only
-  process.env['AWS_ACCESS_KEY_ID'] = 'myKeyId';
-  process.env['AWS_SECRET_ACCESS_KEY'] = 'secretKey';
-  process.env['AWS_REGION'] = 'us-east-1';
-
   var Router = require( 'paper-router' );
   var restify = require('restify');
+  var config = require('config');
 
   var server = restify.createServer({name: 'trip-service'});
   server
@@ -13,7 +9,8 @@ var Server = function(){
     .use(restify.bodyParser())
     .use(restify.queryParser())
   ;
-  server.listen(3000, function(){
+  var serverConfig = config.get('server');
+  server.listen(serverConfig.port || process.env.PORT, function(){
     console.log('%s listening at %s', server.name, server.url);
   });
 
