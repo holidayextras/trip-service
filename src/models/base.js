@@ -1,6 +1,9 @@
 var logger = require('lib/logger');
 //var DbModels = require('lib/models/db/');
 
+var ModelBase = function(){
+};
+
 ModelBase.prototype.save = function(cb){
  this.__db.save(function(err){
    if(err) return logger.error({message: err});
