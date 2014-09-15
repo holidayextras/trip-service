@@ -1,5 +1,6 @@
 var DbTrip = require('models/db/trip');
 var uuid = require('node-uuid');
+var logger = require('lib/logger');
 
 var Trip = function(dbModel){
   this.__db = dbModel;
@@ -7,9 +8,7 @@ var Trip = function(dbModel){
 
 Trip.prototype.save = function(cb){
   this.__db.save(function(err){
-    if(err){
-      return console.log(err);
-    }
+    if(err) return logger.error({message: err});
     if(cb){
       cb();
     }
@@ -27,9 +26,7 @@ Trip.prototype.data = function(){
 
 Trip.prototype.update = function(data, cb){
   this.__db.update({id: this.id}, {$ADD: data}, function(err){
-    if(err){
-      return console.log(err);
-    }
+    if(err) return logger.error({message: err});
     cb();
   });
 };
@@ -42,9 +39,7 @@ Trip.create = function(data){
 
 Trip.getById = function(id, cb){
   DbTrip.get({id: id}, function(err, trip){
-    if(err){
-      return console.log(err);
-    }
+    if(err) return logger.error({message: err});
     cb(trip);
   });
 };

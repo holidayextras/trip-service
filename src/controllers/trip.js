@@ -23,10 +23,12 @@ var TripController = {
         });
       }
       else{ //get all trips, (development only)
+        req.log.debug({message: "Getting all trips"});
         Trip.findAll(function(trips){
           res.send(200, SimpleDataPresenter.transformModels(trips));
         });
       }
+      next();
     },
 
     //create a trip
@@ -47,7 +49,7 @@ var TripController = {
         });
         res.send(201, new SimpleDataPresenter(trip).transform());
       });
-
+      next();
     },
 
     //get a single trip
@@ -60,6 +62,7 @@ var TripController = {
           res.send(404);
         }
       });
+      next();
     },
 
     //add another booking to a trip
@@ -67,16 +70,16 @@ var TripController = {
       Trip.getById(req.params.id, function(trip){
         if(trip){
           //update the trip with the new booking
-          console.log('found trip');
-          console.log(req.params.bookings);
+          req.log.debug({message: 'found trip'});
+          req.log.debug({bookings: req.params.bookings});
           sentBookings = req.params.bookings || []
           trip.update({bookings: sentBookings}, function(){
             sentBookings.forEach(function(ref){
-              console.log("adding index for: " + ref);
+              req.log.debug({message: 'adding index for: ' + ref});
 
               TripBooking.getById(ref, function(tripBooking){
                 if(!tripBooking){
-                  console.log('creating new tripbooking for: ' + ref);
+                  req.log.debug({message: 'creating new tripbooking for: ' + ref});
                   //add to the booking index lookup
                   tripBooking = new TripBooking({
                    ref: ref,
@@ -98,11 +101,13 @@ var TripController = {
           res.send(404);
         }
       });
+      next();
     },
 
     //not implemented
     destroy: function(){
       res.send(500);
+      next();
     }
 
 };

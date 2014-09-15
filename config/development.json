@@ -9,5 +9,8 @@
   },
   "server": {
     "port": 3000
+  },
+  "logger": {
+    "level": "DEBUG"
   }
 }
