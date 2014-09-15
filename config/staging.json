@@ -1,0 +1,10 @@
+{
+  "db": {
+  },
+  "server": {
+  },
+  "logger": {
+    "level": "INFO",
+    "file": "logs/app.log"
+  }
+}
