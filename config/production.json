@@ -1,10 +1,12 @@
 {
   "db": {
+    "aws": {
+    }
   },
   "server": {
   },
   "logger": {
     "level": "INFO",
-    "file": "logs/app.log"
+    "file": "log/app.log"
   }
 }
