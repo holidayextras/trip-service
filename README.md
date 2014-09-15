@@ -75,7 +75,6 @@ curl -i -X PUT -d 'booking=222' http://localhost:3000/trip/0a3a4810-327d-11e4-af
 
 ## Todo
 
-* Model classes should share interface
 * Unit tests for models
 * Docs
 * Input validation

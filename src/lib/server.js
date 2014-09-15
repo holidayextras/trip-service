@@ -24,7 +24,7 @@ var Server = function(){
   //log uncaught exceptions
   server.on('uncaughtException', function(req, res, route, err){
     logger.error(err);
-    res.send(new restify.InternalError(err.message));
+    res.send(err);
   });
 
   var serverConfig = config.get('server');

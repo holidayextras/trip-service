@@ -6,7 +6,7 @@
   "description": "Trip service",
   "main": "server.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register --require should test/controllers"
+    "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register --require should test/controllers 2>/dev/null"
   },
   "dependencies": {
     "aws-sdk": "~2.0.15",

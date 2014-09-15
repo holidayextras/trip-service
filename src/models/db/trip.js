@@ -9,6 +9,10 @@ var DbTrip = db.model('Trip', {
   },
   bookings: {
     type: [String]
+  },
+  email:{
+    type: String,
+    required: true
   }
 });
 

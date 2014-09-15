@@ -4,7 +4,7 @@ var logConfig = config.get('logger');
 
 var streams = {
   level: logConfig.level,
-  stream: process.stdout
+  stream: process.stderr
 };
 
 //override default logging
