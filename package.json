@@ -4,6 +4,7 @@
   "repository": "trip-service",
   "readmeFilename": "README.md",
   "description": "Trip service",
+  "main": "server.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register --require should test/controllers"
   },
@@ -15,12 +16,13 @@
     "paper-router": "~0.2.9",
     "config": "~1.1.0",
     "bunyan": "~1.0.1",
-    "underscore": "~1.7.0"
+    "iz": "~0.5.2"
   },
   "devDependancies": {
     "mocha": "~1.21.4",
     "should": "~4.0.4",
-    "coffee-script": "~1.8.0"
+    "coffee-script": "~1.8.0",
+    "nodemon": "~1.2.1"
   },
   "engines": {
     "node": "0.10.x"

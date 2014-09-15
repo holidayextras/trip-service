@@ -23,7 +23,7 @@ var TripController = {
         });
       }
       else{ //get all trips, (development only)
-        req.log.debug({message: "Getting all trips"});
+        req.log.debug("Getting all trips");
         Trip.findAll(function(trips){
           res.send(200, SimpleDataPresenter.transformModels(trips));
         });

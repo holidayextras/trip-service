@@ -6,4 +6,3 @@ dynamo_local/myKeyId_us-east-1.db
 .elasticbeanstalk/
 
 log/*
-

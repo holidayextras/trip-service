@@ -5,7 +5,7 @@ var util = require('util');
 var ModelBase = require('models/base');
 
 var Trip = function(dbModel){
-  this.__db = dbModel;
+  Trip.super_.call(this, dbModel);
 };
 
 Trip.prototype.id = function(){
@@ -14,7 +14,7 @@ Trip.prototype.id = function(){
 
 Trip.prototype.update = function(data, cb){
   this.__db.update({id: this.id}, {$ADD: data}, function(err){
-    if(err) return logger.error({message: err});
+    if(err) return logger.error(err);
     cb();
   });
 };
@@ -26,8 +26,8 @@ Trip.create = function(data){
 };
 
 Trip.getById = function(id, cb){
-  dbs[wantedclass].get({id: id}, function(err, trip){
-    if(err) return logger.error({message: err});
+  DbTrip.get({id: id}, function(err, trip){
+    if(err) return logger.error(err);
     cb(trip);
   });
 };

@@ -3,7 +3,6 @@ var Server = function(){
   var restify = require('restify');
   var config = require('config');
   var logger = require('lib/logger');
-  var _ = require('underscore');
 
   var server = restify.createServer({
     name: 'trip-service',

@@ -1,10 +1,10 @@
-var DbTripBooking = require('models/db/').TripBooking;
+var DbTripBooking = require('models/db/trip_booking');
 var logger = require('lib/logger');
 var util = require('util');
 var ModelBase = require('models/base');
 
 var TripBooking = function(dbModel){
-  this.__db = dbModel;
+  TripBooking.super_.call(this, dbModel);
 };
 
 TripBooking.prototype.id = function(){
@@ -18,7 +18,7 @@ TripBooking.create = function(data){
 
 TripBooking.getById = function(id, cb){
   DbTripBooking.get({ref: id}, function(err, tripBooking){
-    if(err) return logger.error({message: err});
+    if(err) return logger.error(err);
     cb(tripBooking);
   });
 };

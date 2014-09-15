@@ -1,6 +1,8 @@
 # Trip Service
 
-## Running locally
+## Running
+
+### Locally
 
 Start local dynamodb:
 
@@ -18,13 +20,25 @@ export NODE_ENV=development
 Start server:
 
 ````
-node app.js
+node_module/nodemon/bin/nodemon.js
 ````
 
 Tests:
 
 ````
 npm test
+````
+
+### Staging/production
+
+Set environment in elastic beanstalk
+
+````
+NODE_PATH = ./src
+NODE_ENV = staging
+AWS_ACCESS_KEY_ID = "Your AWS Access Key ID"
+AWS_SECRET_ACCESS_KEY = "Your AWS Secret Access Key"
+AWS_REGION = "us-east-1"
 ````
 
 ### Endpoints
