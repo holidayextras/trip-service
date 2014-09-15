@@ -3,6 +3,10 @@ var logger = require('lib/logger');
 var util = require('util');
 var ModelBase = require('models/base');
 
+var TripBooking = function(dbModel){
+  this.__db = dbModel;
+};
+
 TripBooking.prototype.id = function(){
   return this.__db.ref;
 }

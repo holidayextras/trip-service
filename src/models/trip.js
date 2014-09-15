@@ -1,7 +1,12 @@
-var DbTrip = require('models/db').Trip;
+var DbTrip = require('models/db/trip');
 var uuid = require('node-uuid');
 var logger = require('lib/logger');
+var util = require('util');
 var ModelBase = require('models/base');
+
+var Trip = function(dbModel){
+  this.__db = dbModel;
+};
 
 Trip.prototype.id = function(){
   return this.__db.id;
@@ -37,6 +42,6 @@ Trip.findAll = function(cb){
   });
 }
 
-util.inherits(TripBooking, ModelBase);
+util.inherits(Trip, ModelBase);
 
 module.exports = Trip;

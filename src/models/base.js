@@ -1,5 +1,5 @@
 var logger = require('lib/logger');
-var DbModels = require('lib/models/db/');
+//var DbModels = require('lib/models/db/');
 
 var ModelBase = function(dbModel){
   this.__db = dbModel;
@@ -13,7 +13,7 @@ ModelBase.prototype.save = function(cb){
 };
 
 //data that is contained in this instance
-TripBooking.prototype.data = function(){
+ModelBase.prototype.data = function(){
   return this.__db;
 };
 
