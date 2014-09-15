@@ -1,27 +1,11 @@
-var DbTripBooking = require('models/db/trip_booking');
+var DbTripBooking = require('models/db/').TripBooking;
 var logger = require('lib/logger');
-
-var TripBooking = function(dbModel){
-   this.__db = dbModel;
-};
-
-TripBooking.prototype.save = function(cb){
-  this.__db.save(function(err){
-    if(err) return logger.error({message: err});
-    if(cb){
-      cb();
-    }
-  });
-};
+var util = require('util');
+var ModelBase = require('models/base');
 
 TripBooking.prototype.id = function(){
   return this.__db.ref;
 }
-
-//data that is contained in this instance
-TripBooking.prototype.data = function(){
-  return this.__db;
-};
 
 TripBooking.create = function(data){
   var dbModel = new DbTripBooking(data);
@@ -34,5 +18,7 @@ TripBooking.getById = function(id, cb){
     cb(tripBooking);
   });
 };
+
+util.inherits(TripBooking, ModelBase);
 
 module.exports = TripBooking;
