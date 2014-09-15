@@ -8,9 +8,11 @@ var Trip = function(dbModel){
   Trip.super_.call(this, dbModel);
 };
 
+util.inherits(Trip, ModelBase);
+
 Trip.prototype.id = function(){
   return this.__db.id;
-}
+};
 
 Trip.prototype.update = function(data, cb){
   this.__db.update({id: this.id}, {$ADD: data}, function(err){
@@ -40,8 +42,6 @@ Trip.findAll = function(cb){
     });
     cb(trips);
   });
-}
-
-util.inherits(Trip, ModelBase);
+};
 
 module.exports = Trip;

@@ -1,10 +1,9 @@
 var logger = require('lib/logger');
-var Exception = require('lib/exception');
 var iz = require('iz');
 
 var ModelBase = function(dbModel){
   if(iz.empty(dbModel)){
-    Exception.throw('No data model given');
+    throw new Error('No data model given');
   }
   this.__db = dbModel;
 };

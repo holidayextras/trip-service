@@ -7,6 +7,8 @@ var TripBooking = function(dbModel){
   TripBooking.super_.call(this, dbModel);
 };
 
+util.inherits(TripBooking, ModelBase);
+
 TripBooking.prototype.id = function(){
   return this.__db.ref;
 }
@@ -22,7 +24,5 @@ TripBooking.getById = function(id, cb){
     cb(tripBooking);
   });
 };
-
-util.inherits(TripBooking, ModelBase);
 
 module.exports = TripBooking;

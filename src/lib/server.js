@@ -21,6 +21,12 @@ var Server = function(){
     log: logger
   }));
 
+  //log uncaught exceptions
+  server.on('uncaughtException', function(req, res, route, err){
+    logger.error(err);
+    res.send(new restify.InternalError(err.message));
+  });
+
   var serverConfig = config.get('server');
   server.listen(serverConfig.port || process.env.PORT, function(){
     logger.info('%s listening at %s', server.name, server.url);
