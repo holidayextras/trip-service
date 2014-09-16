@@ -1,6 +1,6 @@
+//Additional index table for looking up via booking refs
 var db = require('lib/db');
 
-//Additional index table for looking up via booking refs
 var DbTripBooking = db.model('TripBooking', {
   ref: {
     type: String,

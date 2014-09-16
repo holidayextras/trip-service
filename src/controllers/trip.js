@@ -5,12 +5,14 @@ var iz = require('iz');
 
 var TripController = {
 
+  //view trip via booking ref and email
   index: function(req, res, next){
     var status = 404;
     var output = [];
     if(iz(req.params.email).required().string().email().valid && iz(req.params.ref).required().string().alphaNumeric().valid){
       TripBooking.getById(req.params.ref, function(tripBooking){
         Trip.getById(tripBooking.id(), function(trip){
+          //TODO check for email address of trip here
           status = 200;
           output = [new SimpleDataPresenter(trip).transform()];
         });
@@ -57,7 +59,7 @@ var TripController = {
     return next();
   },
 
-  //get a single trip
+  //get a single trip via trip id
   show: function (req, res, next){
     var status = 404;
     var output = null;
@@ -76,7 +78,7 @@ var TripController = {
     return next();
   },
 
-  //add another booking to a trip
+  //update a trip with new booking references
   update: function(req, res, next){
     req.log.debug("in update");
     if(iz(req.params.id).required().string().valid && /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i.test(req.params.id) && iz(req.params.bookings).required().anArray().valid){

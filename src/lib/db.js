@@ -1,3 +1,4 @@
+//database layer
 var config = require('config');
 var dynamoose = require('dynamoose');
 var dbConfig = config.get('db');

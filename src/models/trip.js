@@ -1,3 +1,4 @@
+//Trip model with convenience/business logic
 var DbTrip = require('models/db/trip');
 var uuid = require('node-uuid');
 var logger = require('lib/logger');
@@ -11,10 +12,12 @@ var Trip = function(dbModel){
 
 util.inherits(Trip, ModelBase);
 
+//Returns unique database ID for instance
 Trip.prototype.id = function(){
   return this.__db.id;
 };
 
+//Update the model's data
 Trip.prototype.update = function(data, cb){
   var instance = this;
   DbTrip.update({id: instance.id()}, {$PUT: data}, function(err){
@@ -36,12 +39,14 @@ Trip.prototype.update = function(data, cb){
   });
 };
 
+//Create new model in database
 Trip.create = function(data){
   data.id = uuid.v1()
   var dbModel = new DbTrip(data);
   return new Trip(dbModel);
 };
 
+//Find model in database using given ID
 Trip.getById = function(id, found, notFound){
   DbTrip.get({id: id}, function(err, trip){
     if(err) return logger.error(err);

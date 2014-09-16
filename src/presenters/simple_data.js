@@ -1,8 +1,9 @@
+//Really simple model presenter
 var SimpleDataPresenter = function(model){
   this.__model = model;
 };
 
-//just return the model's data
+//just return the model's raw data
 SimpleDataPresenter.prototype.transform = function(){
   return this.__model.data();
 };

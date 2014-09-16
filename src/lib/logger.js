@@ -1,3 +1,4 @@
+//logging system
 var bunyan = require('bunyan');
 var config = require('config');
 var logConfig = config.get('logger');
@@ -7,7 +8,7 @@ var streams = {
   stream: process.stderr
 };
 
-//override default logging
+//override default logging to write to a specific file
 if(logConfig.file){
   streams = {
     level: logConfig.level,

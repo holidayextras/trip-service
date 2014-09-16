@@ -1,3 +1,4 @@
+//REST server
 var Server = function(){
   var Router = require( 'paper-router' );
   var restify = require('restify');
@@ -8,6 +9,8 @@ var Server = function(){
     name: 'trip-service',
     log: logger
   });
+  
+  //load plugins
   server
     .use(restify.fullResponse())
     .use(restify.bodyParser())
@@ -32,10 +35,12 @@ var Server = function(){
     logger.info('%s listening at %s', server.name, server.url);
   });
 
-  var routes = function( router ) {
+  //define routes
+  var routes = function(router){
     router.resources('trip');
   }
 
+  //load routes into server
   var router = new Router(server, __dirname + '/../controllers', routes);
 
 };
