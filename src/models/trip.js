@@ -3,6 +3,7 @@ var uuid = require('node-uuid');
 var logger = require('lib/logger');
 var util = require('util');
 var ModelBase = require('models/base');
+var TripBooking = require('models/trip_booking');
 
 var Trip = function(dbModel){
   Trip.super_.call(this, dbModel);
@@ -15,9 +16,23 @@ Trip.prototype.id = function(){
 };
 
 Trip.prototype.update = function(data, cb){
-  this.__db.update({id: this.id}, {$ADD: data}, function(err){
+  var instance = this;
+  DbTrip.update({id: instance.id()}, {$PUT: data}, function(err){
     if(err) return logger.error(err);
-    cb();
+    data.bookings.forEach(function(ref){
+      logger.debug('adding index for: ' + ref);
+      TripBooking.getById(ref, undefined, function(){ //TODO deal with bookings removed from the trip
+        logger.debug('creating new tripbooking for: ' + ref);
+        //add to the booking index lookup
+        tripBooking = TripBooking.create({
+         ref: ref,
+         tripId: instance.id()
+        });
+        console.log(tripBooking);
+        tripBooking.save();
+      });
+    });
+    if(cb) cb();
   });
 };
 
@@ -27,10 +42,15 @@ Trip.create = function(data){
   return new Trip(dbModel);
 };
 
-Trip.getById = function(id, cb){
+Trip.getById = function(id, found, notFound){
   DbTrip.get({id: id}, function(err, trip){
     if(err) return logger.error(err);
-    if(trip) cb(new Trip(trip));
+    if(trip){
+      if(found) found(new Trip(trip));
+    }
+    else{
+      if(notFound) notFound();
+    }
   });
 };
 

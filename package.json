@@ -16,7 +16,7 @@
     "paper-router": "~0.2.9",
     "config": "~1.1.0",
     "bunyan": "~1.0.1",
-    "iz": "~0.5.2"
+    "iz": "~0.6.0"
   },
   "devDependencies": {
     "mocha": "~1.21.4",

@@ -8,7 +8,7 @@ var TripController = {
   index: function(req, res, next){
     var status = 404;
     var output = [];
-    if(iz(req.params.email).required().string().email() && iz(req.params.ref).required().string().alphaNumeric()){
+    if(iz(req.params.email).required().string().email().valid && iz(req.params.ref).required().string().alphaNumeric().valid){
       TripBooking.getById(req.params.ref, function(tripBooking){
         Trip.getById(tripBooking.id(), function(trip){
           status = 200;
@@ -27,7 +27,7 @@ var TripController = {
 
   //create a trip
   create: function(req, res, next){
-    if(iz(req.params.email).required().string().email() && (req.params.bookings === undefined || Array.isArray(req.params.bookings))){
+    if(iz(req.params.email).required().string().email().valid && iz(req.params.bookings).anArray().valid){
       req.log.debug("input ok");
       var bookings = req.params.bookings || [];
       var email = req.params.email;
@@ -61,7 +61,7 @@ var TripController = {
   show: function (req, res, next){
     var status = 404;
     var output = null;
-    if(iz(req.params.id).required().string() && /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i.test(req.params.id)){
+    if(iz(req.params.id).required().string().valid && /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i.test(req.params.id)){
       Trip.getById(req.params.id, function(trip){
         status = 200;
         output = new SimpleDataPresenter(trip).transform();
@@ -78,44 +78,30 @@ var TripController = {
 
   //add another booking to a trip
   update: function(req, res, next){
-    status = 404;
-    output = null;
-    if(iz(req.params.id).required().string() && /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i.test(req.params.id)){
+    req.log.debug("in update");
+    if(iz(req.params.id).required().string().valid && /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i.test(req.params.id) && iz(req.params.bookings).required().anArray().valid){
+      req.log.debug("input ok");
       Trip.getById(req.params.id, function(trip){
         //update the trip with the new booking
         req.log.debug('found trip');
         req.log.debug({bookings: req.params.bookings});
-        sentBookings = req.params.bookings || []
+        sentBookings = req.params.bookings || [];
         trip.update({bookings: sentBookings}, function(){
-          sentBookings.forEach(function(ref){
-            req.log.debug('adding index for: ' + ref);
-
-            TripBooking.getById(ref, function(tripBooking){
-              req.log.debug('creating new tripbooking for: ' + ref);
-              //add to the booking index lookup
-              tripBooking = new TripBooking({
-               ref: ref,
-               tripId: trip.id()
-              });
-              tripBooking.save();
-            });
-
+          //get the updated trip data
+          Trip.getById(trip.id(), function(trip){
+            res.send(200, new SimpleDataPresenter(trip).transform());
           });
-
         });
-        //get the updated trip data
-        Trip.getById(trip.id(), function(trip){
-          status = 200;
-          output = new SimpleDataPresenter(trip).transform();
-        });
+      },
+      function(){
+        req.log.debug('trip not found');
+        res.send(404);
       });
     }
     else{
       req.log.error({input: req.params}, "Invalid input");
-      status = 400;
-      output = {message: "Invalid input"};
+      res.send(400, {message: "Invalid input"});
     }
-    res.send(status, output);
     return next();
   },
 

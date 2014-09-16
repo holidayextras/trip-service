@@ -7,7 +7,26 @@ client = restify.createJsonClient
 
 describe 'GET /trip/<uuid>', ->
 
-  context "unknown trip id", ->
+  describe 'input validation', ->
+
+    context 'invalid trip id', ->
+
+      it 'should return a bad request response code', (done) ->
+        client.get '/trip/foo', (err, req, res, data) ->
+          res.statusCode.should.be.equal 400
+          done()
+
+      it 'should return an object', (done) ->
+        client.get '/trip/foo', (err, req, res, data) ->
+          data.should.be.instanceof Object
+          done()
+
+      it 'should return a error message', (done) ->
+        client.get '/trip/foo', (err, req, res, data) ->
+          data.message.should.be.equal 'Invalid input'
+          done()
+
+  context 'with unknown trip id', ->
 
     it 'should return a not found response code', (done) ->
       client.get '/trip/11111111-1111-1111-1111-111111111111', (err, req, res, data) ->

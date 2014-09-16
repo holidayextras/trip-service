@@ -18,10 +18,15 @@ TripBooking.create = function(data){
   return new TripBooking(dbModel);
 };
 
-TripBooking.getById = function(id, cb){
+TripBooking.getById = function(id, found, notFound){
   DbTripBooking.get({ref: id}, function(err, tripBooking){
     if(err) return logger.error(err);
-    if (tripBooking) cb(new TripBooking(tripBooking));
+    if(tripBooking){
+      if(found) found(new TripBooking(tripBooking));
+    }
+    else{
+      if(notFound) notFound();
+    }
   });
 };
 

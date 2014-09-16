@@ -25,8 +25,14 @@ node_module/nodemon/bin/nodemon.js
 
 Tests:
 
+Spawning own server to test against:
 ````
 npm test
+````
+
+Using the current running server to test against:
+````
+NO_TEST_SERVER=1 npm test
 ````
 
 ### Staging/production
@@ -70,11 +76,10 @@ curl -i http://localhost:3000/trip/cc66e510-322d-11e4-8459-1150f735bf96
 Update a trip with a new booking ref:
 
 ````
-curl -i -X PUT -d 'booking=222' http://localhost:3000/trip/0a3a4810-327d-11e4-afa6-23eed8fcd0d2
+curl -i -X PUT -d 'bookings[]=222' http://localhost:3000/trip/0a3a4810-327d-11e4-afa6-23eed8fcd0d2
 ````
 
 ## Todo
 
 * Unit tests for models
 * Docs
-* Input validation
