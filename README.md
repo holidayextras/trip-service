@@ -58,7 +58,7 @@ curl -i http://localhost:3000/trip?ref=abc
 Create a new trip with two linked bookings:
 
 ````
-curl -i -X POST -d 'bookings[]=abc&bookings[]=cde' http://localhost:3000/trip
+curl -i -X POST -d 'bookings[]=abc&bookings[]=cde&email=test@test.com' http://localhost:3000/trip
 ```` 
 
 Get trip:

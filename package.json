@@ -18,7 +18,7 @@
     "bunyan": "~1.0.1",
     "iz": "~0.5.2"
   },
-  "devDependancies": {
+  "devDependencies": {
     "mocha": "~1.21.4",
     "should": "~4.0.4",
     "coffee-script": "~1.8.0",

@@ -30,7 +30,7 @@ Trip.create = function(data){
 Trip.getById = function(id, cb){
   DbTrip.get({id: id}, function(err, trip){
     if(err) return logger.error(err);
-    cb(trip);
+    if(trip) cb(new Trip(trip));
   });
 };
 

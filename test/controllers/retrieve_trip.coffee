@@ -10,11 +10,11 @@ describe 'GET /trip/<uuid>', ->
   context "unknown trip id", ->
 
     it 'should return a not found response code', (done) ->
-      client.get '/trip/abc', (err, req, res, data) ->
+      client.get '/trip/11111111-1111-1111-1111-111111111111', (err, req, res, data) ->
         res.statusCode.should.be.equal 404
         done()
 
     it 'should return an empty object', (done) ->
-      client.get '/trip/abc', (err, req, res, data) ->
+      client.get '/trip/11111111-1111-1111-1111-111111111111', (err, req, res, data) ->
         data.should.be.instanceof(Object).and.be.empty
         done()

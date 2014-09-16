@@ -21,7 +21,7 @@ TripBooking.create = function(data){
 TripBooking.getById = function(id, cb){
   DbTripBooking.get({ref: id}, function(err, tripBooking){
     if(err) return logger.error(err);
-    cb(tripBooking);
+    if (tripBooking) cb(new TripBooking(tripBooking));
   });
 };
 
