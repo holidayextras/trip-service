@@ -6,33 +6,42 @@ var util = require('util');
 var ModelBase = require('models/base');
 var TripBooking = require('models/trip_booking');
 
-var Trip = function(dbModel){
-  Trip.super_.call(this, dbModel);
+var TripModel = function(dbModel){
+  TripModel.super_.call(this, dbModel);
 };
 
-util.inherits(Trip, ModelBase);
+util.inherits(TripModel, ModelBase);
 
 //Returns unique database ID for instance
-Trip.prototype.id = function(){
+TripModel.prototype.id = function(){
   return this.__db.id;
 };
 
 //Update the model's data
-Trip.prototype.update = function(data, cb){
+TripModel.prototype.update = function(data, cb){
   var instance = this;
   DbTrip.update({id: instance.id()}, {$PUT: data}, function(err){
-    if(err) return logger.error(err);
+    if(err){
+      logger.error(err);
+      cb(err);
+    }
     data.bookings.forEach(function(ref){
       logger.debug('adding index for: ' + ref);
-      TripBooking.getById(ref, undefined, function(){ //TODO deal with bookings removed from the trip
-        logger.debug('creating new tripbooking for: ' + ref);
-        //add to the booking index lookup
-        tripBooking = TripBooking.create({
-         ref: ref,
-         tripId: instance.id()
-        });
-        console.log(tripBooking);
-        tripBooking.save();
+      TripBooking.getById(ref, function(error, tripBooking){ //TODO deal with bookings removed from the trip
+        if(err){
+          logger.error(err);
+          cb(err);
+        }
+        if(!tripBooking){
+          logger.debug('creating new tripbooking for: ' + ref);
+          //add to the booking index lookup
+          tripBooking = TripBooking.create({
+           ref: ref,
+           tripId: instance.id()
+          });
+          console.log(tripBooking);
+          tripBooking.save();
+        }
       });
     });
     if(cb) cb();
@@ -40,33 +49,36 @@ Trip.prototype.update = function(data, cb){
 };
 
 //Create new model in database
-Trip.create = function(data){
+TripModel.create = function(data){
   data.id = uuid.v1()
   var dbModel = new DbTrip(data);
-  return new Trip(dbModel);
+  return new TripModel(dbModel);
 };
 
 //Find model in database using given ID
-Trip.getById = function(id, found, notFound){
+TripModel.getById = function(id, cb){
   DbTrip.get({id: id}, function(err, trip){
-    if(err) return logger.error(err);
+    if(err){
+      logger.error(err);
+      cb(err);
+    }
     if(trip){
-      if(found) found(new Trip(trip));
+      cb(null, new TripModel(trip));
     }
     else{
-      if(notFound) notFound();
+      cb();
     }
   });
 };
 
 //returns an array of trips
-Trip.findAll = function(cb){
+TripModel.findAll = function(cb){
   DbTrip.scan().exec(function(err, dbTrips, lastKey){
     var trips = dbTrips.map(function(dbTrip){
-      return new Trip(dbTrip);
+      return new TripModel(dbTrip);
     });
     cb(trips);
   });
 };
 
-module.exports = Trip;
+module.exports = TripModel;

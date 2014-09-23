@@ -4,34 +4,33 @@ var logger = require('lib/logger');
 var util = require('util');
 var ModelBase = require('models/base');
 
-var TripBooking = function(dbModel){
-  TripBooking.super_.call(this, dbModel);
+var TripBookingModel = function(dbModel){
+  TripBookingModel.super_.call(this, dbModel);
 };
 
-util.inherits(TripBooking, ModelBase);
+util.inherits(TripBookingModel, ModelBase);
 
 //Return models unique ID in database
-TripBooking.prototype.id = function(){
+TripBookingModel.prototype.id = function(){
   return this.__db.ref;
 }
 
 //Create new model
-TripBooking.create = function(data){
+TripBookingModel.create = function(data){
   var dbModel = new DbTripBooking(data);
-  return new TripBooking(dbModel);
+  return new TripBookingModel(dbModel);
 };
 
 //Lookup model by ID in database
-TripBooking.getById = function(id, found, notFound){
+TripBookingModel.getById = function(id, cb){
   DbTripBooking.get({ref: id}, function(err, tripBooking){
-    if(err) return logger.error(err);
-    if(tripBooking){  //found item
-      if(found) found(new TripBooking(tripBooking));
+    if(err){
+      logger.error(err);
+      return cb(err);
     }
-    else{ //item not found
-      if(notFound) notFound();
-    }
+    if(!tripBooking) return cb();
+    cb(null, new TripBookingModel(tripBooking));
   });
 };
 
-module.exports = TripBooking;
+module.exports = TripBookingModel;

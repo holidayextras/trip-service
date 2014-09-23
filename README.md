@@ -20,7 +20,7 @@ export NODE_ENV=development
 Start server:
 
 ````
-node_module/nodemon/bin/nodemon.js
+node_modules/nodemon/bin/nodemon.js server.js
 ````
 
 Tests:
