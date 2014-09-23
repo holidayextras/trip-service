@@ -48,25 +48,12 @@ Trip.prototype.find = function(email, ref, cb){
 Trip.prototype.create = function(email, bookings, cb){
   if(iz(email).required().string().email().valid && iz(bookings).anArray().valid){
     this.logger.debug("input ok");
-    var bookings = bookings || [];
-    var email = email;
-    var trip = TripModel.create({
-      bookings: bookings,
+    TripModel.create({
+      bookings: bookings || [],
       email: email
-    });
-    this.logger.debug("created trip");
-    var instance = this;
-    trip.save(function(){
-      instance.logger.debug('saved trip');
-      //create booking ref lookup if required
-      bookings.forEach(function(booking){
-        var tripBooking = TripBookingModel.create({
-          ref: booking,
-          tripId: trip.id()
-        });
-        tripBooking.save();
-        instance.logger.debug('saved tripbooking');
-      });
+    },
+    function(err, trip){
+      if(err) return cb(err);
       cb(null, new SimpleDataPresenter(trip).transform());
     });
   }

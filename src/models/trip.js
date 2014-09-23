@@ -4,7 +4,7 @@ var uuid = require('node-uuid');
 var logger = require('lib/logger');
 var util = require('util');
 var ModelBase = require('models/base');
-var TripBooking = require('models/trip_booking');
+var TripBookingModel = require('models/trip_booking');
 
 var TripModel = function(dbModel){
   TripModel.super_.call(this, dbModel);
@@ -27,7 +27,7 @@ TripModel.prototype.update = function(data, cb){
     }
     data.bookings.forEach(function(ref){
       logger.debug('adding index for: ' + ref);
-      TripBooking.getById(ref, function(error, tripBooking){ //TODO deal with bookings removed from the trip
+      TripBookingModel.getById(ref, function(error, tripBooking){ //TODO deal with bookings removed from the trip
         if(err){
           logger.error(err);
           cb(err);
@@ -49,10 +49,25 @@ TripModel.prototype.update = function(data, cb){
 };
 
 //Create new model in database
-TripModel.create = function(data){
+TripModel.create = function(data, cb){
   data.id = uuid.v1()
   var dbModel = new DbTrip(data);
-  return new TripModel(dbModel);
+  trip = new TripModel(dbModel);
+  logger.debug("created trip");
+  trip.save(function(err){
+    if(err) return cb(err);
+    logger.debug('saved trip');
+    //create booking ref lookup if required
+    data.bookings.forEach(function(booking){
+      var tripBooking = TripBookingModel.create({
+        ref: booking,
+        tripId: trip.id()
+      });
+      tripBooking.save();
+      logger.debug('saved tripbooking');
+    });
+    cb(null, trip);
+  });
 };
 
 //Find model in database using given ID
