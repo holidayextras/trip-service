@@ -7,10 +7,9 @@ var TripController = {
     var trip = new Trip();
     trip.find(req.params.email, req.params.ref, function(error, output){
       if(error){
-        res.send(400, error);
-        return next();
+        res.send(TripController._statusCodeForError(error), error);
       }
-      if(output){
+      else if(output){
         res.send(200, [output]);
       }
       else{
@@ -25,7 +24,7 @@ var TripController = {
     var trip = new Trip();
     trip.create(req.params.email, req.params.bookings, function(error, output){
       if(error){
-        res.send(400, error);
+        res.send(TripController._statusCodeForError(error), error);
       }
       else{
         res.send(201, output);
@@ -39,10 +38,13 @@ var TripController = {
     var trip = new Trip();
     trip.show(req.params.id, function(error, output){
       if(error){
-        res.send(400, error);
+        res.send(TripController._statusCodeForError(error), error);
+      }
+      else if(output){
+        res.send(200, output);
       }
       else{
-        res.send(200, output);
+        res.send(404, {});
       }
       return next();
     });
@@ -53,7 +55,7 @@ var TripController = {
     var trip = new Trip();
     trip.update(req.params.id, req.params.bookings, function(error, output){
       if(error){
-        res.send(400, error);
+        res.send(TripController._statusCodeForError(error), error);
       }
       else{
         res.send(200, output);
@@ -68,6 +70,18 @@ var TripController = {
     return next();
   }
 
+};
+
+TripController._statusCodeForError = function(err){
+  if(err.type){
+    if(err.type == 'not_found'){
+      return 404;
+    }
+    else if(err.type == 'validation'){
+      return 400;
+    }
+  }
+  return 500;
 };
 
 module.exports = TripController;

@@ -14,7 +14,17 @@ Trip.prototype.find = function(email, ref, cb){
     TripBookingModel.getById(ref, function(err, tripBooking){
       if(err) return cb(err);
       if(!tripBooking) return cb();
-      TripModel.getById(tripBooking.id(), function(trip){
+      tripBooking.getTrip(function(err, trip){
+        if(err) return cb(err);
+        if(!trip){
+          instance.logger.error({
+            id: tripBooking.id()
+          },'Trip not found');
+          return cb({
+            type: 'not_found',
+            message: 'Trip not found'
+          });
+        }
         //TODO check for email address of trip here
         var output = new SimpleDataPresenter(trip).transform();
         cb(null, output);
@@ -28,7 +38,10 @@ Trip.prototype.find = function(email, ref, cb){
         email: email
       }
     }, 'Invalid input');
-    cb({message: 'Invalid input'});
+    cb({
+      type: 'validation',
+      message: 'Invalid input'
+    });
   }
 };
 
@@ -64,7 +77,10 @@ Trip.prototype.create = function(email, bookings, cb){
         bookings: bookings
       }
     }, 'Invalid input');
-    cb({message: 'Invalid input'});
+    cb({
+      type: 'validation',
+      message: 'Invalid input'
+    });
   }
 };
 
@@ -73,24 +89,30 @@ Trip.prototype.update = function(id, bookings, cb){
   if(iz(id).required().string().valid && /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i.test(id) && iz(bookings).required().anArray().valid){
     this.logger.debug("input ok");
     var instance = this;
-    TripModel.getById(id, function(error, trip){
-      if(error) return cb(error);
+    TripModel.getById(id, function(err, trip){
+      if(err) return cb(err);
       if(!trip){
         instance.logger.debug('trip not found');
-        return cb({message: 'trip not found'});
+        return cb({
+          type: 'not_found',
+          message: 'trip not found'
+        });
       }
       //update the trip with the new booking
       instance.logger.debug('found trip');
       instance.logger.debug({bookings: bookings});
       sentBookings = bookings || [];
-      trip.update({bookings: sentBookings}, function(error){
-        if(error) return cb(error);
+      trip.update({bookings: sentBookings}, function(err){
+        if(err) return cb(err);
         //get the updated trip data
-        TripModel.getById(trip.id(), function(error, model){
-          if(error) return cb(error);
+        TripModel.getById(trip.id(), function(err, model){
+          if(err) return cb(err);
           if(!model){
             instance.logger.debug('trip not found');
-            return cb({message: 'trip not found'});
+            return cb({
+              type: 'not_found',
+              message: 'trip not found'
+            });
           }
           cb(null, new SimpleDataPresenter(model).transform());
         });
@@ -104,13 +126,18 @@ Trip.prototype.update = function(id, bookings, cb){
         bookings: bookings
       }
     }, "Invalid input");
-    cb({message: "Invalid input"});
+    cb({
+      type: 'validation',
+      message: "Invalid input"
+    });
   }
 };
 
 Trip.prototype.show = function(id, cb){
   if(iz(id).required().string().valid && /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i.test(id)){
-    TripModel.getById(id, function(error, trip){
+    TripModel.getById(id, function(err, trip){
+      if(err) return cb(err);
+      if(!trip) return cb();
       cb(null, new SimpleDataPresenter(trip).transform());
     });
   }
@@ -120,9 +147,11 @@ Trip.prototype.show = function(id, cb){
         id: id
       }
     }, "Invalid input");
-    cb({message: "Invalid input"});
+    cb({
+      type: 'validation',
+      message: "Invalid input"
+    });
   }
 },
-
 
 module.exports = Trip;
