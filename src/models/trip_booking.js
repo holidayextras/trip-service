@@ -1,15 +1,18 @@
 //Trip booking model with convenience/business logic
-var DbTripBooking = require('models/db/trip_booking');
-var Trip = require('models/trip');
-var logger = require('lib/logger');
-var util = require('util');
 var ModelBase = require('models/base');
+var util = require('util');
 
 var TripBookingModel = function(dbModel){
   TripBookingModel.super_.call(this, dbModel);
 };
 
+module.exports = TripBookingModel;
+
 util.inherits(TripBookingModel, ModelBase);
+
+var TripModel = require('models/trip');
+var DbTripBooking = require('models/db/trip_booking');
+var logger = require('lib/logger');
 
 //Return models unique ID in database
 TripBookingModel.prototype.id = function(){
@@ -17,7 +20,7 @@ TripBookingModel.prototype.id = function(){
 }
 
 TripBookingModel.prototype.getTrip = function(cb){
-  Trip.getById(this.id(), function(err, trip){
+  TripModel.getById(this._tripId(), function(err, trip){
     if(err) return cb(err);
     cb(null, trip);
   });
@@ -41,4 +44,6 @@ TripBookingModel.getById = function(id, cb){
   });
 };
 
-module.exports = TripBookingModel;
+TripBookingModel.prototype._tripId = function(){
+  return this.__db.tripId;
+}
