@@ -9,7 +9,7 @@ describe 'find()', ->
 
   context 'with invalid email', ->
 
-    it 'returns and error object', (done) ->
+    it 'returns an error object', (done) ->
       module.find 'notanemail', 'ABC123', (error, output) ->
         error.should.be.an.Object
         error.should.have.property 'message'
