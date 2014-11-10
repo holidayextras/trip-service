@@ -1,8 +1,8 @@
-var TripModel = require('models/trip');
-var TripBookingModel = require('models/trip_booking');
+var TripModel = require('./models/trip');
+var TripBookingModel = require('./models/trip_booking');
 var iz = require('iz');
-var logger = require('lib/logger');
-var SimpleDataPresenter = require('presenters/simple_data');
+var logger = require('./lib/logger');
+var SimpleDataPresenter = require('./presenters/simple_data');
 
 var Trip = function(){
   this.logger = logger;

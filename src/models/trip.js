@@ -1,6 +1,6 @@
 //Trip model with convenience/business logic
 var util = require('util');
-var ModelBase = require('models/base');
+var ModelBase = require('./base');
 
 var TripModel = function(dbModel){
   TripModel.super_.call(this, dbModel);
@@ -9,10 +9,10 @@ var TripModel = function(dbModel){
 module.exports = TripModel;
 util.inherits(TripModel, ModelBase);
 
-var DbTrip = require('models/db/trip');
+var DbTrip = require('./db/trip');
 var uuid = require('node-uuid');
-var logger = require('lib/logger');
-var TripBookingModel = require('models/trip_booking');
+var logger = require('../lib/logger');
+var TripBookingModel = require('./trip_booking');
 
 //Returns unique database ID for instance
 TripModel.prototype.id = function(){

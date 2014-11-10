@@ -1,5 +1,5 @@
 //Main data storage model
-var db = require('lib/db');
+var db = require('../../lib/db');
 
 var DbTrip = db.model('Trip', {
   id: {

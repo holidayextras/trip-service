@@ -1,5 +1,5 @@
 //Trip booking model with convenience/business logic
-var ModelBase = require('models/base');
+var ModelBase = require('./base');
 var util = require('util');
 
 var TripBookingModel = function(dbModel){
@@ -10,9 +10,9 @@ module.exports = TripBookingModel;
 
 util.inherits(TripBookingModel, ModelBase);
 
-var TripModel = require('models/trip');
-var DbTripBooking = require('models/db/trip_booking');
-var logger = require('lib/logger');
+var TripModel = require('./trip');
+var DbTripBooking = require('./db/trip_booking');
+var logger = require('../lib/logger');
 
 //Return models unique ID in database
 TripBookingModel.prototype.id = function(){

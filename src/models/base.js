@@ -1,5 +1,5 @@
 //Abstract base model for all data models
-var logger = require('lib/logger');
+var logger = require('../lib/logger');
 var iz = require('iz');
 
 var ModelBase = function(dbModel){
