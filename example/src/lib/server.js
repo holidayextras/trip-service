@@ -1,8 +1,7 @@
 //REST server
 var Server = function(){
-  var Router = require( 'paper-router' );
+  var Router = require('paper-router');
   var restify = require('restify');
-  var config = require('config');
   var logger = require('lib/logger');
 
   var server = restify.createServer({
@@ -30,8 +29,7 @@ var Server = function(){
     res.send(err);
   });
 
-  var serverConfig = config.get('server');
-  server.listen(serverConfig.port || process.env.PORT, function(){
+  server.listen(process.env.PORT, function(){
     logger.info('%s listening at %s', server.name, server.url);
   });
 

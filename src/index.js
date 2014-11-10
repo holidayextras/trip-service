@@ -18,6 +18,7 @@ Trip.prototype.find = function(email, ref, cb){
         if(err) return cb(err);
         if(!trip){
           instance.logger.error({
+            method: 'find',
             id: tripBooking.id()
           },'Trip not found');
           return cb({
@@ -33,6 +34,7 @@ Trip.prototype.find = function(email, ref, cb){
   }
   else{
     this.logger.error({
+      method: 'find',
       input: {
         ref: ref,
         email: email
@@ -47,7 +49,6 @@ Trip.prototype.find = function(email, ref, cb){
 
 Trip.prototype.create = function(email, bookings, cb){
   if(iz(email).required().string().email().valid && iz(bookings).anArray().valid){
-    this.logger.debug("input ok");
     TripModel.create({
       bookings: bookings || [],
       email: email
@@ -59,6 +60,7 @@ Trip.prototype.create = function(email, bookings, cb){
   }
   else{
     this.logger.error({
+      method: 'create',
       input: {
         email: email,
         bookings: bookings
@@ -72,9 +74,7 @@ Trip.prototype.create = function(email, bookings, cb){
 };
 
 Trip.prototype.update = function(id, bookings, cb){
-  this.logger.debug("in update");
   if(iz(id).required().string().valid && /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i.test(id) && iz(bookings).required().anArray().valid){
-    this.logger.debug("input ok");
     var instance = this;
     TripModel.getById(id, function(err, trip){
       if(err) return cb(err);
@@ -108,6 +108,7 @@ Trip.prototype.update = function(id, bookings, cb){
   }
   else{
     this.logger.error({
+      method: 'update',
       input: {
         id: id,
         bookings: bookings
@@ -130,6 +131,7 @@ Trip.prototype.show = function(id, cb){
   }
   else{
     this.logger.error({
+      method: 'show',
       input: {
         id: id
       }

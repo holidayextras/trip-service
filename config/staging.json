@@ -1,8 +1,6 @@
 {
   "db": {
   },
-  "server": {
-  },
   "logger": {
     "level": "INFO",
     "file": "log/app.log"

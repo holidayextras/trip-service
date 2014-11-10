@@ -7,7 +7,7 @@ describe 'show()', ->
   before ->
     module = new Trip
 
-  context 'invalid trip id', ->
+  context 'with an invalid trip id', ->
 
     it 'returns an error object', (done) ->
       module.show 'foo', (err, trip) ->
@@ -16,7 +16,7 @@ describe 'show()', ->
         err.should.have.property 'type'
         done()
 
-  context 'with unknown trip id', ->
+  context 'with an unknown trip id', ->
 
     it 'does not return a trip or error', (done) ->
       module.show '11111111-1111-1111-1111-111111111111', (err, trip) ->
@@ -33,7 +33,7 @@ describe 'show()', ->
         existingTripId = output.id
         done()
 
-    it 'does not return a trip or error', (done) ->
+    it 'returns the trip', (done) ->
       module.show existingTripId, (err, trip) ->
         (err is null).should.be.true
         trip.should.be.an.Object

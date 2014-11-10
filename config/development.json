@@ -7,9 +7,6 @@
       "region": "us-east-1"
     }
   },
-  "server": {
-    "port": 3000
-  },
   "logger": {
     "level": "DEBUG"
   }
